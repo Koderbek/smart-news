@@ -1,0 +1,5 @@
+{{ form_start(form) }}
+    {{ form_row(form.login) }}
+    {{ form_row(form.password) }}
+    <button class="btn">{{ button_label|default('Сохранить') }}</button>
+{{ form_end(form) }}

@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Выбор категорий{% endblock %}
+
+{% block body %}
+    <h1>Выбор категорий</h1>
+
+    {{ form_start(form) }}
+        {{ form_widget(form.newsCategories) }}
+        <button class="btn">{{ button_label|default('Сохранить') }}</button>
+    {{ form_end(form) }}
+
+    <a href="{{ path('user_show', {'id': app.user.id}) }}">Назад</a>
+{% endblock %}
