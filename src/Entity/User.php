@@ -22,7 +22,6 @@ class User implements UserInterface
 {
     /** @var string */
     private const ROLE_USER = 'ROLE_USER';
-    private const ROLE_ADMIN = 'ROLE_ADMIN';
 
     /**
      * @var integer
@@ -37,7 +36,7 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="login")
-     * @Assert\NotBlank(message="Необходимо заполнить поле")
+     * @Assert\NotBlank(message="Необходимо заполнить логин")
      */
     protected string $login;
 
@@ -45,7 +44,7 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="password", type="string")
-     * @Assert\NotBlank(message="Необходимо заполнить поле")
+     * @Assert\NotBlank(message="Необходимо заполнить пароль")
      */
     protected string $password;
 
@@ -62,16 +61,16 @@ class User implements UserInterface
      */
     protected string $roles;
 
-//    /**
-//     * @var ArrayCollection|NewsCategory[]
-//     * @ORM\ManyToMany(targetEntity="NewsCategory")
-//     */
-//    protected $newsCategories;
+    /**
+     * @var ArrayCollection|NewsCategory[]
+     * @ORM\ManyToMany(targetEntity="App\Entity\NewsCategory")
+     */
+    protected $newsCategories;
 
     public function __construct()
     {
         $this->setRoles(self::ROLE_USER);
-//        $this->newsCategories = new ArrayCollection();
+        $this->newsCategories = new ArrayCollection();
     }
 
     /**
@@ -154,21 +153,21 @@ class User implements UserInterface
         $this->roles = $roles;
     }
 
-//    /**
-//     * @return NewsCategory[]|ArrayCollection
-//     */
-//    public function getNewsCategories()
-//    {
-//        return $this->newsCategories;
-//    }
-//
-//    /**
-//     * @param NewsCategory[]|ArrayCollection $newsCategories
-//     */
-//    public function setNewsCategories($newsCategories): void
-//    {
-//        $this->newsCategories = $newsCategories;
-//    }
+    /**
+     * @return NewsCategory[]|ArrayCollection
+     */
+    public function getNewsCategories()
+    {
+        return $this->newsCategories;
+    }
+
+    /**
+     * @param NewsCategory[]|ArrayCollection $newsCategories
+     */
+    public function setNewsCategories($newsCategories): void
+    {
+        $this->newsCategories = $newsCategories;
+    }
 
     /**
      * @return string

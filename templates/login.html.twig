@@ -49,7 +49,7 @@
                         <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                     {% endif %}
 
-                    <input type="hidden" name="_target_path" value="/user/"/>
+                    <input type="hidden" name="_target_path" value="/user/2"/>
                     <div>
                         <button type="submit" class="btn btn-primary">Войти</button>
                         <a href="{{ path('user_new') }}">Регистрация</a>

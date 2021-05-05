@@ -14,16 +14,16 @@
     </button>
 
     <h2>Login: {{ app.user.login }}</h2>
-{#    <h3>Категории:#}
-{#        {% if user.newsCategories.count >= 1 %}#}
-{#            {{ user.newsCategories|join(', ') }}#}
-{#        {% else %}#}
-{#            Пусто!#}
-{#            <a href="{{ path('enter_category', {'id': user.id}) }}">#}
-{#                Сформировать интересы?#}
-{#            </a>#}
-{#        {% endif %}#}
-{#    </h3>#}
+    <h3>Категории:
+        {% if user.newsCategories.count >= 1 %}
+            {{ user.newsCategories|join(', ') }}
+        {% else %}
+            Пусто!
+            <a href="{{ path('enter_category', {'id': user.id}) }}">
+                Сформировать интересы?
+            </a>
+        {% endif %}
+    </h3>
     <button type="button" class="btn btn-outline-secondary btn-sm">
         <a style="color: #505050" href="{{ path('logout') }}">Выход</a>
     </button>

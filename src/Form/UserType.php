@@ -24,8 +24,19 @@ class UserType extends AbstractType
             ])
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'first_options' => array('label' => 'Пароль', 'attr' => ['class' => 'input']),
-                'second_options' => array('label' => 'Повторите пароль', 'attr' => ['class' => 'input']),
+                'label' => 'Пароль',
+                'first_options' => [
+                    'label' => ' ',
+                    'attr' => [
+                        'class' => 'input',
+                        'style' => 'margin-bottom: 10px',
+                        'placeholder' => 'Введите пароль'
+                    ]
+                ],
+                'second_options' => [
+                    'label' => ' ',
+                    'attr' => ['class' => 'input', 'placeholder' => 'Повторите пароль']
+                ],
                 'invalid_message' => 'Пароли не совпадают',
                 'required' => true
             ])

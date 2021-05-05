@@ -26,7 +26,7 @@
         <div class="container-fluid" style="background-color: #505050">
             <label class="navbar-header">
                 {% if app.user %}
-                    <a href="{{ path('news_index') }}" class="navbar-brand"><p style="color: #FFFFFF">Главная</p></a>
+{#                    <a href="{{ path('news_index') }}" class="navbar-brand"><p style="color: #FFFFFF">Главная</p></a>#}
                     <a class="navbar-brand" href="{{ path('user_show', {'id': app.user.id}) }}">
                         <p style="color: #FFE484">{{ app.user.login }}</p>
                     </a>
