@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Новостная лента{% endblock %}
+
+{% block body %}
+    <h1>Новостная лента</h1>
+    {% if app.user %}
+        {% set categories = app.user.newsCategories %}
+        <div class="dropdown">
+            <a style="color: darkgreen" id="drop1" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <b>Фильтр</b>
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="{{ path('news_show') }}">Сбросить</a></li>
+                <li class="divider"></li>
+                {% for category in categories %}
+                    <li><a href="{{ path('news_show', {'category': category.englishName}) }}">{{ category }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    <table class="table">
+        <tbody>
+        {% for item in items %}
+            <tr>
+                <td>
+                    <label style="color: #2398D6">
+                        <a href="{{ path('news_original', {'guid': item.link|url_encode}) }}">{{ item.title }}</a>
+                    </label>
+                    <label>Дата публикации: {{ item.pubDate|date('d-m-Y H:m') }}</label>
+                </td>
+                <td><label>{{ item.description }}</label></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

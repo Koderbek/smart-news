@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\NewsCategory;
 use App\Entity\News;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use RuntimeException;
 use SimpleXMLElement;
@@ -23,8 +24,10 @@ use Throwable;
  */
 class NewsController extends AbstractController
 {
+    private const DEFAULT_LIMIT = 40;
+
     /**
-     * @Route("/add", methods={"POST"})
+     * @Route("/add", name="news_add", methods={"POST"})
      *
      * @param Request $request
      * @param EntityManagerInterface $em
@@ -86,5 +89,45 @@ class NewsController extends AbstractController
         }
 
         return new Response('OK', Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/", name="news_show", methods={"GET"})
+     */
+    public function showUserNews(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        $categories = $user->getNewsCategories();
+        $enterCategory = $request->query->get('category');
+        $userNews = [];
+
+        //Если пользователь еще не выбрал категории, то отправляем его на страницу выбора категорий
+        if ($categories->count() === 0) {
+            return $this->redirectToRoute('enter_category', [
+                'id' => $user->getId(),
+            ]);
+        }
+
+        $userNews = $entityManager->getRepository(News::class)->findBy(
+            ['category' => !empty($enterCategory) ? $user->getCategoryByName($enterCategory) : $categories->toArray()],
+            ['pubDate' => 'DESC'],
+            self::DEFAULT_LIMIT
+        );
+
+        return $this->render('news/index.html.twig', [
+            'items' => $userNews,
+        ]);
+    }
+
+    /**
+     * @Route("/original/{guid}", name="news_original", methods={"GET"})
+     */
+    public function showOriginal(string $guid, EntityManagerInterface $entityManager): Response
+    {
+        /** @var News $news */
+        $news = $entityManager->getRepository(News::class)->find(urldecode($guid));
+
+        return $this->redirect($news->getOriginalLink());
     }
 }

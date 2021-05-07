@@ -162,6 +162,19 @@ class User implements UserInterface
     }
 
     /**
+     * @param string $name
+     * @return false|NewsCategory
+     */
+    public function getCategoryByName(string $name)
+    {
+        return $this->getNewsCategories()->filter(
+            function (NewsCategory $category) use ($name) {
+                return $category->getEnglishName() === $name;
+            }
+        )->first();
+    }
+
+    /**
      * @param NewsCategory[]|ArrayCollection $newsCategories
      */
     public function setNewsCategories($newsCategories): void

@@ -24,21 +24,23 @@
 {% block header %}
     <nav class="navbar navbar-default">
         <div class="container-fluid" style="background-color: #505050">
-            <label class="navbar-header">
+            <label class="navbar-header" style="margin-left: 50px; margin-right: 50px">
                 {% if app.user %}
-{#                    <a href="{{ path('news_index') }}" class="navbar-brand"><p style="color: #FFFFFF">Главная</p></a>#}
-                    <a class="navbar-brand" href="{{ path('user_show', {'id': app.user.id}) }}">
-                        <p style="color: #FFE484">{{ app.user.login }}</p>
+                    <a class="navbar-brand" href="{{ path('news_show') }}" style="color: #FFFFFF">
+                        Smart News
+                    </a>
+                    <a class="navbar-brand" href="{{ path('user_show', {'id': app.user.id}) }}" style="color: #FFE484">
+                        {{ app.user.login }}
                     </a>
                 {% else %}
-                    <a class="navbar-brand"><p style="color: #FFFFFF">Smart News</p></a>
+                    <a class="navbar-brand" style="color: #FFFFFF">Smart News</a>
                 {% endif %}
             </label>
         </div>
     </nav>
 {% endblock %}
 
-<div class="container-fluid">
+<div class="container-fluid" style="margin-left: 50px; margin-right: 50px">
     {% block body %}{% endblock %}
 </div>
 {% block javascripts %}{% endblock %}

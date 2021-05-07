@@ -6,13 +6,13 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class NewsCategory
  * @package App\Entity
  *
  * @ORM\Entity()
+ * @ORM\Table(name="news_category",indexes={@ORM\Index(name="news_category_english_name_idx", columns={"english_name"})})
  */
 class NewsCategory
 {

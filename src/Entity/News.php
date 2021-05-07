@@ -16,6 +16,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @package App\Entity
  *
  * @ORM\Entity()
+ * @ORM\Table(name="news",indexes={@ORM\Index(name="news_pub_date_idx", columns={"pub_date"})})
  */
 class News
 {
@@ -26,8 +27,6 @@ class News
      * @var string
      * @ORM\Column(type="string", unique=true)
      * @ORM\Id()
-     *
-     * @Groups("show")
      */
     protected string $guid;
 
@@ -128,7 +127,7 @@ class News
      */
     public function getDescription(): string
     {
-        return $this->description;
+        return html_entity_decode($this->description);
     }
 
     /**
@@ -180,8 +179,9 @@ class News
 
         try {
             $page = phpQuery::newDocument($html);
+            $link = $page->find('.mg-story__meta')->attr('href');
 
-            return $page->find('.mg-story__meta')->attr('href');
+            return !empty($link) ? $link : $this->getLink();
         } catch (Exception $e) {
             throw new RuntimeException('Ошибка парсинга HTML. ' . $e->getMessage());
         }
