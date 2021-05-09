@@ -19,11 +19,6 @@ class EnterCategoryType extends AbstractType
             ->add('newsCategories', EntityType::class, [
                 'label' => 'Категории новостей',
                 'class' => NewsCategory::class,
-                'choice_attr' => function($choice, $key, $value) {
-                    return [
-                        'style' => 'margin-left: 10px',
-                    ];
-                },
                 'expanded' => true,
                 'multiple' => true,
                 'required' => false,

@@ -4,8 +4,18 @@
 
 {% block body %}
     <h1>Редактирование Пользователя</h1>
+    <br>
 
-    {{ include('user/_form.html.twig', {'button_label': 'Обновить'}) }}
+    {{ form_start(form) }}
+        <h4>{{ form_label(form.login) }}</h4>
+        {{ form_widget(form.login) }}
+        <br><br>
 
-    <a href="{{ path('user_show', {'id': user.id}) }}">Назад</a>
+        <h4>{{ form_label(form.password) }}</h4>
+        {{ form_widget(form.password) }}
+        <br>
+
+        <button class="btn btn-primary">{{ button_label|default('Обновить') }}</button>
+        <a class="btn btn-primary" href="{{ path('user_show', {'id': user.id}) }}">Назад</a>
+    {{ form_end(form) }}
 {% endblock %}

@@ -20,6 +20,7 @@ class UserType extends AbstractType
         $builder
             ->add('login', null, [
                 'label' => 'Логин',
+                'attr' => ['class' => 'form-control'],
                 'required' => true
             ])
             ->add('password', RepeatedType::class, [
@@ -28,14 +29,14 @@ class UserType extends AbstractType
                 'first_options' => [
                     'label' => ' ',
                     'attr' => [
-                        'class' => 'input',
+                        'class' => 'form-control',
                         'style' => 'margin-bottom: 10px',
                         'placeholder' => 'Введите пароль'
                     ]
                 ],
                 'second_options' => [
                     'label' => ' ',
-                    'attr' => ['class' => 'input', 'placeholder' => 'Повторите пароль']
+                    'attr' => ['class' => 'form-control', 'placeholder' => 'Повторите пароль']
                 ],
                 'invalid_message' => 'Пароли не совпадают',
                 'required' => true

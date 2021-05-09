@@ -100,7 +100,6 @@ class NewsController extends AbstractController
         $user = $this->getUser();
         $categories = $user->getNewsCategories();
         $enterCategory = $request->query->get('category');
-        $userNews = [];
 
         //Если пользователь еще не выбрал категории, то отправляем его на страницу выбора категорий
         if ($categories->count() === 0) {
@@ -116,7 +115,7 @@ class NewsController extends AbstractController
         );
 
         return $this->render('news/index.html.twig', [
-            'items' => $userNews,
+            'items' => $userNews ?? [],
         ]);
     }
 

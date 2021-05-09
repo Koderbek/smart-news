@@ -9,7 +9,6 @@ use Exception;
 use phpQuery;
 use RuntimeException;
 use SimpleXMLElement;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Class News
@@ -72,22 +71,6 @@ class News
         $this->setTitle((string)$data->title);
         $this->setDescription((string)$data->description);
         $this->setPubDate(strtotime((string)$data->pubDate));
-    }
-
-    /**
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId(int $id): void
-    {
-        $this->id = $id;
     }
 
     /**

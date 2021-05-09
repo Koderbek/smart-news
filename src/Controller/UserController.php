@@ -7,7 +7,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\EnterCategoryType;
 use App\Form\UserType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,7 +29,7 @@ class UserController extends AbstractController
     /**
      * @Route("/new", name="user_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -41,9 +41,8 @@ class UserController extends AbstractController
             $encoder = $this->passwordEncoder;
             $user->setPassword($encoder->encodePassword($user, $user->getPassword()));
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
+            $entityManager->persist($user);
+            $entityManager->flush();
 
             return $this->redirectToRoute('enter_category', ['id' => $user->getId()]);
         }
@@ -67,13 +66,13 @@ class UserController extends AbstractController
     /**
      * @Route("/{id}/edit", name="user_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, User $user): Response
+    public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->flush();
 
             return $this->redirectToRoute('user_show', [
                 'id' => $user->getId(),
@@ -89,13 +88,13 @@ class UserController extends AbstractController
     /**
      * @Route("/{id}/enter-category", name="enter_category", methods={"GET","POST"})
      */
-    public function enterCategory(Request $request, User $user): Response
+    public function enterCategory(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(EnterCategoryType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->flush();
 
             return $this->redirectToRoute('user_show', [
                 'id' => $user->getId(),

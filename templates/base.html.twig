@@ -19,17 +19,22 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
             crossorigin="anonymous"></script>
+    <!-- jquery -->
+    <script src="../js/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 {% block header %}
     <nav class="navbar navbar-default">
-        <div class="container-fluid" style="background-color: #505050">
+        <div class="container-fluid bg-primary">
             <label class="navbar-header" style="margin-left: 50px; margin-right: 50px">
                 {% if app.user %}
                     <a class="navbar-brand" href="{{ path('news_show') }}" style="color: #FFFFFF">
-                        Smart News
+                        Лента
                     </a>
-                    <a class="navbar-brand" href="{{ path('user_show', {'id': app.user.id}) }}" style="color: #FFE484">
+                    <a class="navbar-brand"
+                       href="{{ path('user_show', {'id': app.user.id}) }}"
+                       style="color: #FFEC5C; font-size: 11pt;"
+                    >
                         {{ app.user.login }}
                     </a>
                 {% else %}

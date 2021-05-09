@@ -7,8 +7,20 @@
 
     {{ form_start(form) }}
         {{ form_widget(form.newsCategories) }}
-        <button class="btn">{{ button_label|default('Сохранить') }}</button>
-    {{ form_end(form) }}
+        <br>
 
-    <a href="{{ path('user_show', {'id': app.user.id}) }}">Назад</a>
+        <button class="btn btn-primary">{{ button_label|default('Сохранить') }}</button>
+        <a class="btn btn-primary" href="{{ path('user_show', {'id': app.user.id}) }}">Назад</a>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $('#{{ form.newsCategories.vars.id }}').find('label').each(function (index) {
+            $(this).css('width', '20%');
+            if (++index % 4 === 0) {
+                $(this).after('<br>');
+            }
+        });
+    </script>
 {% endblock %}

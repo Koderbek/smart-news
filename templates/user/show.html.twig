@@ -4,14 +4,14 @@
 
 {% block body %}
     {% if user.newsCategories.count >= 1 %}
-        <button type="button" class="btn">
-            <a style="color: #505050" href="{{ path('enter_category', {'id': user.id}) }}">Изменить интересы</a>
-        </button>
+        <a class="btn btn-primary" href="{{ path('enter_category', {'id': user.id}) }}">
+            Изменить интересы
+        </a>
     {% endif %}
 
-    <button type="button" class="btn">
-        <a style="color: #505050" href="{{ path('user_edit', {'id': user.id}) }}">Редактировать профиль</a>
-    </button>
+    <a class="btn btn-primary" href="{{ path('user_edit', {'id': user.id}) }}">
+        Редактировать профиль
+    </a>
 
     <h2>Login: {{ app.user.login }}</h2>
     <h3>Категории:
@@ -24,7 +24,8 @@
             </a>
         {% endif %}
     </h3>
-    <button type="button" class="btn btn-outline-secondary btn-sm">
-        <a style="color: #505050" href="{{ path('logout') }}">Выход</a>
-    </button>
+
+    <a class="btn btn-primary" href="{{ path('logout') }}">
+        Выход
+    </a>
 {% endblock %}

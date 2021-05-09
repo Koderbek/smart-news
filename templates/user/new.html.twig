@@ -5,7 +5,17 @@
 {% block body %}
     <h1>Создание Пользователя</h1>
     <br>
-    {{ include('user/_form.html.twig') }}
 
-    <a href="{{ path('login') }}">Назад</a>
+    {{ form_start(form) }}
+        <h4>{{ form_label(form.login) }}</h4>
+        {{ form_widget(form.login) }}
+        <br><br>
+
+        <h4>{{ form_label(form.password) }}</h4>
+        {{ form_widget(form.password) }}
+        <br>
+
+        <button class="btn btn-primary">{{ button_label|default('Сохранить') }}</button>
+        <a class="btn btn-primary" href="{{ path('login') }}">Назад</a>
+    {{ form_end(form) }}
 {% endblock %}
