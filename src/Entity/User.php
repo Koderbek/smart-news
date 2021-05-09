@@ -67,10 +67,18 @@ class User implements UserInterface
      */
     protected $newsCategories;
 
+    /**
+     * @var ArrayCollection|News[]
+     *
+     * @ORM\ManyToMany(targetEntity="App\Entity\News")
+     */
+    protected $likedNews;
+
     public function __construct()
     {
         $this->setRoles(self::ROLE_USER);
         $this->newsCategories = new ArrayCollection();
+        $this->likedNews = new ArrayCollection();
     }
 
     /**
@@ -180,6 +188,42 @@ class User implements UserInterface
     public function setNewsCategories($newsCategories): void
     {
         $this->newsCategories = $newsCategories;
+    }
+
+    /**
+     * @return News[]|ArrayCollection
+     */
+    public function getLikedNews()
+    {
+        return $this->likedNews;
+    }
+
+    /**
+     * @param News[]|ArrayCollection $likedNews
+     */
+    public function setLikedNews($likedNews): void
+    {
+        $this->likedNews = $likedNews;
+    }
+
+    /**
+     * @param News $news
+     */
+    public function addLikedNews(News $news): void
+    {
+        if (!$this->likedNews->contains($news)){
+            $this->likedNews->add($news);
+        }
+    }
+
+    /**
+     * @param News $news
+     */
+    public function removeLikedNews(News $news): void
+    {
+        if ($this->likedNews->contains($news)){
+            $this->likedNews->removeElement($news);
+        }
     }
 
     /**

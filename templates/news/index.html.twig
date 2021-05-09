@@ -26,13 +26,28 @@
             <tr>
                 <td>
                     <label style="color: #2398D6">
-                        <a href="{{ path('news_original', {'guid': item.link|url_encode}) }}">{{ item.title }}</a>
+                        <a href="{{ path('news_original', {'id': item.id}) }}">{{ item.title }}</a>
                     </label>
                     <label>Дата публикации: {{ item.pubDate|date('d-m-Y H:m') }}</label>
                 </td>
                 <td><label>{{ item.description }}</label></td>
+                <td>
+                    <a href="#" onclick="likeNews('{{ path('news_like', {'id': item.id}) }}')">
+                        <img src="/icons/heart.svg" width="10px" height="10px" alt="Like" />
+                    </a>
+                </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        function likeNews(url) {
+            $.get(url).fail(function () {
+                alert("Error!");
+            });
+        }
+    </script>
 {% endblock %}

@@ -62,7 +62,11 @@ class NewsController extends AbstractController
                 $count = 0;
                 foreach ($items as $item) {
                     $pubDate = strtotime((string)$item->pubDate);
-                    if ($today > $pubDate || array_key_exists((string)$item->guid, $addedNews)) {
+                    if (
+                        $today > $pubDate
+                        || array_key_exists((string)$item->guid, $addedNews)
+                        || in_array((string)$item->title, $addedNews, true)
+                    ) {
                         continue;
                     }
 
@@ -72,7 +76,7 @@ class NewsController extends AbstractController
                         $news = new News($item, $category);
                         $em->persist($news);
 
-                        $addedNews[(string)$item->guid] = $news;
+                        $addedNews[(string)$item->guid] = (string)$item->title;
                         $count++;
 
                         if ($count === 20) {
@@ -120,13 +124,34 @@ class NewsController extends AbstractController
     }
 
     /**
-     * @Route("/original/{guid}", name="news_original", methods={"GET"})
+     * @Route("/original/{id}", name="news_original", methods={"GET"})
      */
-    public function showOriginal(string $guid, EntityManagerInterface $entityManager): Response
+    public function showOriginal(News $news, EntityManagerInterface $entityManager): Response
     {
-        /** @var News $news */
-        $news = $entityManager->getRepository(News::class)->find(urldecode($guid));
+        /** @var User $user */
+        $user = $this->getUser();
+        $user->addLikedNews($news);
+
+        $entityManager->flush();
 
         return $this->redirect($news->getOriginalLink());
+    }
+
+    /**
+     * @Route("/like/{id}", name="news_like", methods={"GET"})
+     */
+    public function likeNews(News $news, EntityManagerInterface $entityManager): Response
+    {
+        try {
+            /** @var User $user */
+            $user = $this->getUser();
+            $user->addLikedNews($news);
+
+            $entityManager->flush();
+
+            return new Response('OK');
+        } catch (Throwable $exception) {
+            throw new RuntimeException($exception->getMessage());
+        }
     }
 }

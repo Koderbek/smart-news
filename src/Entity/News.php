@@ -15,7 +15,10 @@ use SimpleXMLElement;
  * @package App\Entity
  *
  * @ORM\Entity()
- * @ORM\Table(name="news",indexes={@ORM\Index(name="news_pub_date_idx", columns={"pub_date"})})
+ * @ORM\Table(name="news",indexes={
+ *     @ORM\Index(name="news_pub_date_idx", columns={"pub_date"}),
+ *     @ORM\Index(name="news_guid_idx", columns={"guid"})
+ * })
  */
 class News
 {
@@ -23,9 +26,17 @@ class News
     public const RSS_HOST = 'https://news.yandex.ru/';
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(type="integer")
+     * @ORM\Id()
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected int $id;
+
+    /**
      * @var string
      * @ORM\Column(type="string", unique=true)
-     * @ORM\Id()
      */
     protected string $guid;
 
@@ -71,6 +82,22 @@ class News
         $this->setTitle((string)$data->title);
         $this->setDescription((string)$data->description);
         $this->setPubDate(strtotime((string)$data->pubDate));
+    }
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId(int $id): void
+    {
+        $this->id = $id;
     }
 
     /**
@@ -184,21 +211,5 @@ class News
     public function setCategory(NewsCategory $category): void
     {
         $this->category = $category;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getCategoryId(): ?int
-    {
-        return $this->getCategory() ? $this->getCategory()->getId() : null;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getCategoryName(): ?string
-    {
-        return $this->getCategory() ? $this->getCategory()->getName() : null;
     }
 }
