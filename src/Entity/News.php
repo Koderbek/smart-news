@@ -14,7 +14,7 @@ use SimpleXMLElement;
  * Class News
  * @package App\Entity
  *
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="App\Repository\NewsRepository")
  * @ORM\Table(name="news",indexes={
  *     @ORM\Index(name="news_pub_date_idx", columns={"pub_date"}),
  *     @ORM\Index(name="news_guid_idx", columns={"guid"})

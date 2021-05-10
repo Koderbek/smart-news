@@ -104,6 +104,7 @@ class NewsController extends AbstractController
         $user = $this->getUser();
         $categories = $user->getNewsCategories();
         $enterCategory = $request->query->get('category');
+        $userNews = [];
 
         //Если пользователь еще не выбрал категории, то отправляем его на страницу выбора категорий
         if ($categories->count() === 0) {
@@ -112,11 +113,20 @@ class NewsController extends AbstractController
             ]);
         }
 
-        $userNews = $entityManager->getRepository(News::class)->findBy(
-            ['category' => !empty($enterCategory) ? $user->getCategoryByName($enterCategory) : $categories->toArray()],
-            ['pubDate' => 'DESC'],
-            self::DEFAULT_LIMIT
-        );
+        $repository = $entityManager->getRepository(News::class);
+
+        //Если фильтра нет, то ищем рекомендации
+        if (empty($enterCategory)) {
+            $userNews = $repository->findRecommendations($user);
+        }
+
+        if ($userNews === []) {
+            $userNews = $repository->findBy(
+                ['category' => !empty($enterCategory) ? $user->getCategoryByName($enterCategory) : $categories->toArray()],
+                ['pubDate' => 'DESC'],
+                self::DEFAULT_LIMIT
+            );
+        }
 
         return $this->render('news/index.html.twig', [
             'items' => $userNews ?? [],
