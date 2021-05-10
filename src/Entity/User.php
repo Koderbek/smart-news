@@ -227,6 +227,15 @@ class User implements UserInterface
     }
 
     /**
+     * @param News $news
+     * @return bool
+     */
+    public function isLikedNews(News $news): bool
+    {
+        return $this->likedNews->contains($news);
+    }
+
+    /**
      * @return string
      */
     public function getUsername(): string

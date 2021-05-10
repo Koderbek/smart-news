@@ -138,14 +138,18 @@ class NewsController extends AbstractController
     }
 
     /**
-     * @Route("/like/{id}", name="news_like", methods={"GET"})
+     * @Route("/{id}/{score}", name="news_score", methods={"GET"}, requirements={"id": "\d+"})
      */
-    public function likeNews(News $news, EntityManagerInterface $entityManager): Response
+    public function scoreNews(News $news, string $score, EntityManagerInterface $entityManager): Response
     {
         try {
             /** @var User $user */
             $user = $this->getUser();
-            $user->addLikedNews($news);
+            if ($score === 'like') {
+                $user->addLikedNews($news);
+            } else {
+                $user->removeLikedNews($news);
+            }
 
             $entityManager->flush();
 
