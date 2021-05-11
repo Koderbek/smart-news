@@ -73,7 +73,7 @@ class NewsRepository extends ServiceEntityRepository
         $news = [];
         /** @var User $user */
         foreach ($users as $user) {
-            $likedNews = $user->getLikedNews();
+            $likedNews = $user->getWeekLikedNews();
             /** @var News $value */
             foreach ($likedNews as $value) {
                 //Устанавливаем лимит в 40 записей

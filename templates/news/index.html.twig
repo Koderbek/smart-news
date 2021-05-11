@@ -3,7 +3,7 @@
 {% block title %}Новостная лента{% endblock %}
 
 {% block body %}
-    <h1>Новостная лента</h1>
+    <h1>Новостная лента{{ tapeType ? ': ' ~ tapeType : '' }}</h1>
     {% if app.user %}
         {% set categories = app.user.newsCategories %}
         <div class="dropdown">
@@ -12,7 +12,7 @@
                 <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">
-                <li><a href="{{ path('news_show') }}">Сбросить</a></li>
+                <li><a href="{{ path('news_show') }}">Рекомендации</a></li>
                 <li class="divider"></li>
                 {% for category in categories %}
                     <li><a href="{{ path('news_show', {'category': category.englishName}) }}">{{ category }}</a></li>

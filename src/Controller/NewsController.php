@@ -105,6 +105,7 @@ class NewsController extends AbstractController
         $categories = $user->getNewsCategories();
         $enterCategory = $request->query->get('category');
         $userNews = [];
+        $tapeType = null;
 
         //Если пользователь еще не выбрал категории, то отправляем его на страницу выбора категорий
         if ($categories->count() === 0) {
@@ -118,18 +119,24 @@ class NewsController extends AbstractController
         //Если фильтра нет, то ищем рекомендации
         if (empty($enterCategory)) {
             $userNews = $repository->findRecommendations($user);
+            $tapeType = 'Рекомендации';
         }
 
         if ($userNews === []) {
+            $category = !empty($enterCategory) ? $user->getCategoryByName($enterCategory) : null;
+
             $userNews = $repository->findBy(
-                ['category' => !empty($enterCategory) ? $user->getCategoryByName($enterCategory) : $categories->toArray()],
+                ['category' => $category ?? $categories->toArray()],
                 ['pubDate' => 'DESC'],
                 self::DEFAULT_LIMIT
             );
+
+            $tapeType = isset($category) ? $category->getName() : null;
         }
 
         return $this->render('news/index.html.twig', [
-            'items' => $userNews ?? [],
+            'items' => $userNews,
+            'tapeType' => $tapeType
         ]);
     }
 

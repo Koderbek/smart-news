@@ -199,6 +199,22 @@ class User implements UserInterface
     }
 
     /**
+     * Понравившиеся за неделю новости
+     *
+     * @return ArrayCollection|News[]
+     */
+    public function getWeekLikedNews(): ArrayCollection
+    {
+        $lastWeek = strtotime("-1 week");
+
+        return $this->getLikedNews()->filter(
+            function (News $news) use ($lastWeek) {
+                return $news->getPubDate() >= $lastWeek;
+            }
+        );
+    }
+
+    /**
      * @param News[]|ArrayCollection $likedNews
      */
     public function setLikedNews($likedNews): void
