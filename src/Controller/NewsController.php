@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\NewsCategory;
 use App\Entity\News;
 use App\Entity\User;
+use App\Services\Elasticsearch\ElasticsearchServiceFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use RuntimeException;
 use SimpleXMLElement;
@@ -36,7 +37,8 @@ class NewsController extends AbstractController
      */
     public function add(Request $request, EntityManagerInterface $em): Response
     {
-        /** @var News[] $addedNews */
+        /** @var News[] $indexNews */
+        $indexNews = [];
         $addedNews = [];
         $today = strtotime(date('d-m-Y'));
 
@@ -76,6 +78,7 @@ class NewsController extends AbstractController
                         $news = new News($item, $category);
                         $em->persist($news);
 
+                        $indexNews[] = $news;
                         $addedNews[(string)$item->guid] = (string)$item->title;
                         $count++;
 
@@ -92,11 +95,18 @@ class NewsController extends AbstractController
             }
         }
 
+        $elasticsearchService = ElasticsearchServiceFactory::createService();
+        $elasticsearchService->indexNews($indexNews);
+
         return new Response('OK', Response::HTTP_OK);
     }
 
     /**
      * @Route("/", name="news_show", methods={"GET"})
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
      */
     public function showUserNews(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -142,6 +152,10 @@ class NewsController extends AbstractController
 
     /**
      * @Route("/original/{id}", name="news_original", methods={"GET"})
+     *
+     * @param News $news
+     * @param EntityManagerInterface $entityManager
+     * @return Response
      */
     public function showOriginal(News $news, EntityManagerInterface $entityManager): Response
     {
@@ -156,6 +170,11 @@ class NewsController extends AbstractController
 
     /**
      * @Route("/{id}/{score}", name="news_score", methods={"GET"}, requirements={"id": "\d+"})
+     *
+     * @param News $news
+     * @param string $score
+     * @param EntityManagerInterface $entityManager
+     * @return Response
      */
     public function scoreNews(News $news, string $score, EntityManagerInterface $entityManager): Response
     {
@@ -174,5 +193,32 @@ class NewsController extends AbstractController
         } catch (Throwable $exception) {
             throw new RuntimeException($exception->getMessage());
         }
+    }
+
+    /**
+     * @Route("/search/{phrase}", name="news_search", methods={"GET"})
+     *
+     * @param string $phrase
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    public function searchNews(string $phrase, EntityManagerInterface $entityManager): Response
+    {
+        $elasticsearchService = ElasticsearchServiceFactory::createService();
+        $newsIds = $elasticsearchService->searchNewsByPhrase($phrase);
+
+        $newsRepository = $entityManager->getRepository(News::class);
+        $news = [];
+        if ($newsIds !== []) {
+            //Важен порядок выдачи, поэтому дергаем поочередно
+            foreach ($newsIds as $id) {
+                $news[] = $newsRepository->find($id);
+            }
+        }
+
+        return $this->render('news/index.html.twig', [
+            'items' => $news,
+            'tapeType' => '',
+        ]);
     }
 }

@@ -20,6 +20,10 @@
             </ul>
         </div>
     {% endif %}
+
+    {% if items is empty %}
+        <div>Список пуст</div>
+    {% endif %}
     <table class="table">
         <tbody>
         {% for item in items %}
