@@ -196,16 +196,16 @@ class NewsController extends AbstractController
     }
 
     /**
-     * @Route("/search/{phrase}", name="news_search", methods={"GET"})
+     * @Route("/search", name="news_search", methods={"POST"})
      *
-     * @param string $phrase
+     * @param Request $request
      * @param EntityManagerInterface $entityManager
      * @return Response
      */
-    public function searchNews(string $phrase, EntityManagerInterface $entityManager): Response
+    public function searchNews(Request $request, EntityManagerInterface $entityManager): Response
     {
         $elasticsearchService = ElasticsearchServiceFactory::createService();
-        $newsIds = $elasticsearchService->searchNewsByPhrase($phrase);
+        $newsIds = $elasticsearchService->searchNewsByPhrase($request->get('phrase'));
 
         $newsRepository = $entityManager->getRepository(News::class);
         $news = [];

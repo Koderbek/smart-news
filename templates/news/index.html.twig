@@ -4,22 +4,39 @@
 
 {% block body %}
     <h1>Новостная лента{{ tapeType ? ': ' ~ tapeType : '' }}</h1>
-    {% if app.user %}
-        {% set categories = app.user.newsCategories %}
-        <div class="dropdown">
-            <a style="color: darkgreen" id="drop1" href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <b>Фильтр</b>
-                <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu">
-                <li><a href="{{ path('news_show') }}">Рекомендации</a></li>
-                <li class="divider"></li>
-                {% for category in categories %}
-                    <li><a href="{{ path('news_show', {'category': category.englishName}) }}">{{ category }}</a></li>
-                {% endfor %}
-            </ul>
-        </div>
-    {% endif %}
+
+    <div style="margin-bottom: 10px">
+        {% if app.user %}
+            {% set categories = app.user.newsCategories %}
+            <div class="dropdown" style="display: inline-block;">
+                <a id="drop1" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <button class="btn btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-filter-square" viewBox="0 0 16 16">
+                            <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                            <path d="M6 11.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
+                        </svg>
+                        Фильтр
+                    </button>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="{{ path('news_show') }}">Рекомендации</a></li>
+                    <li class="divider"></li>
+                    {% for category in categories %}
+                        <li><a href="{{ path('news_show', {'category': category.englishName}) }}">{{ category }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <form action="{{ path('news_search') }}" method="post" class="form-inline" style="display: inline-block; float: right">
+            <input class="form-control mr-sm-2" type="search" name="phrase" placeholder="Введите запрос" aria-label="Введите запрос">
+            <button class="btn btn-primary my-2 my-sm-0" type="submit">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                </svg>
+            </button>
+        </form>
+    </div>
 
     {% if items is empty %}
         <div>Список пуст</div>
