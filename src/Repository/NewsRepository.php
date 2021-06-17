@@ -8,11 +8,15 @@ use App\Entity\News;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
 
 class NewsRepository extends ServiceEntityRepository
 {
     /** @var int */
     private const LIMIT = 40;
+
+    /** @var int - процент схожести */
+    private const SIMILARITY_PERCENTAGE = 80;
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -34,15 +38,24 @@ class NewsRepository extends ServiceEntityRepository
                                                                 FROM user_news_category uc
                                                                 WHERE uc.user_id = :user_id)
                                    AND unc.user_id != :user_id
-                                 GROUP BY unc.user_id)
+                                 GROUP BY unc.user_id
+                                 HAVING count(unc.news_category_id) >= :category_count)
             GROUP BY un.user_id
+            HAVING count(un.news_id) >= :like_count
             ORDER BY count(un.news_id) DESC;
             SQL;
+
+        $params = [
+            'user_id' => $user->getId(),
+            'category_count' => ($user->getNewsCategories()->count() / 100) * self::SIMILARITY_PERCENTAGE,
+            'like_count' => ($user->getLikedNews()->count() / 100) * self::SIMILARITY_PERCENTAGE
+        ];
+
 
         $conn = $this->getEntityManager()->getConnection();
 
         $stmt = $conn->prepare($sql);
-        $stmt->execute(['user_id' => $user->getId()]);
+        $stmt->execute($params);
         $result = $stmt->fetchAllAssociative();
 
         $userIds = $this->getUserIds($result);
