@@ -8,7 +8,6 @@ use App\Entity\News;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
 
 class NewsRepository extends ServiceEntityRepository
 {
